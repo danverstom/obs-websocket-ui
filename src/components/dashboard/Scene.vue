@@ -1,7 +1,6 @@
 <template>
-  <div class="box">
+  <div class="scene-container">
     <span class="subtitle">{{ name }}</span>
-    <span class="">{{ is_active }}</span>
   </div>
 </template>
 
@@ -9,8 +8,7 @@
 export default {
   name: "Scene",
   props: {
-    name: String,
-    is_active: Boolean,
+    name: String
   },
 };
 </script>
@@ -23,6 +21,12 @@ export default {
 span {
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.scene-container{
+  background-color: rgba(0,0,0,0.1);
+  margin: 5px;
+  padding: 5px;
 }
 
 </style>
