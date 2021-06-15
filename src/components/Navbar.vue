@@ -64,8 +64,8 @@ export default {
           route: "/",
         },
         {
-          title: "About",
-          route: "/about",
+          title: "Dashboard",
+          route: "/dashboard",
         },
       ],
     };
