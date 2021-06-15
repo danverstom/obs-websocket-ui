@@ -1,0 +1,12 @@
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:400,700');
+
+// Set your brand colors
+$dark_purple: #71368a;
+
+// Update Bulma's global variables
+$family-sans-serif: "Montserrat", sans-serif;
+$primary: $dark_purple;
+$link: $dark_purple;
+
+@import "~bulma/bulma";
