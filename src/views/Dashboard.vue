@@ -2,8 +2,21 @@
   <section class="section">
     <div class="container">
       <div class="box">
-        <div v-for="scene in scenes" :key="scene.name">
-          <Scene :name="scene.name" /> 
+        <Connect
+          v-on:connected="
+            (obs) => {
+              this.acceptConnection(obs);
+            }
+          "
+          v-if="!obs"
+        />
+        <div v-if="obs">
+          <div v-for="scene in scene_data.scenes" :key="scene.name">
+            <Scene
+              :name="scene.name"
+              :current_scene="scene_data.currentScene"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -11,34 +24,30 @@
 </template>
 
 <script>
-import Scene from '../components/dashboard/Scene.vue'
-import OBSWebSocket from 'obs-websocket-js'
+import Scene from "../components/dashboard/Scene.vue";
+import Connect from "../components/dashboard/Connect.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    Scene
+    Scene,
+    Connect,
   },
-  async created(){
-    const obs = new OBSWebSocket();
-    console.log(obs)
-    await obs.connect({ address: 'localhost:4444', password: '$up3rSecretP@ssw0rd' });
-    const scenes_data = await obs.send('GetSceneList');
-    console.log(scenes_data)
-    this.scenes = scenes_data.scenes
+  methods: {
+    async acceptConnection(obs) {
+      this.obs = obs;
+      console.log(this.obs);
+      const scene_data = await this.obs.send("GetSceneList");
+      console.log(scene_data);
+      this.scene_data = scene_data;
+    },
   },
   data() {
     return {
-      scenes: [
-        {
-          name: "Minecraft"
-        },
-        {
-          name: "Starting Soon"
-        }
-      ]
-    }
-  }
-}
+      scene_data: [],
+      obs: false,
+    };
+  },
+};
 </script>
 
