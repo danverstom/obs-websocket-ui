@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Scene from "@/components/dashboard/Scene.vue";
+import Scene from "@/components/dashboard/scenes/Scene.vue";
 
 export default {
   name: "Scenes",

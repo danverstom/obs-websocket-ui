@@ -60,8 +60,8 @@ export default {
   name: "Connect",
   data() {
     return {
-      host: "",
-      port: 4444,
+      host: this.$route.query.host ? this.$route.query.host : "",
+      port: this.$route.query.port ? this.$route.query.port : 4444,
       password: "",
       error: "",
       loading: false,

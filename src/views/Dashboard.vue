@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Scenes from "../components/dashboard/Scenes.vue";
+import Scenes from "@/components/dashboard/scenes/Scenes.vue";
 import Connect from "../components/dashboard/Connect.vue";
 
 export default {
