@@ -7,6 +7,7 @@
       :detail_scene="detail_scene"
       v-on:changeScene="changeScene"
       v-on:dropDownClick="dropDownClick"
+      :obs="obs"
     />
   </div>
 </template>
@@ -46,9 +47,6 @@ export default {
       this.scene_data = scene_data;
       this.current_scene = scene_data.currentScene;
       this.ui_selected_scene = scene_data.currentScene;
-
-      console.log(`Current Scene: ${this.current_scene}`)
-      console.log(`UI Selected Scene: ${this.ui_selected_scene}`)
 
     },
     changeScene(name) {

@@ -20,37 +20,59 @@
 
     <div v-if="detail_scene === name">
       <div class="box">
-        <h2 class="subtitle">Detailed View</h2>
+        <div v-for="source in scene_items" :key="source.itemId">
+          <Source :source_details="source" :obs="obs" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Source from "@/components/dashboard/sources/Source.vue";
+
 export default {
   name: "Scene",
+  components: {
+    Source,
+  },
   props: {
     name: String,
     current_scene: String,
     ui_selected_scene: String,
-    detail_scene: String
+    detail_scene: String,
+    obs: Object
   },
   data() {
     return {
-      detail: false,
+      scene_items: false,
     };
   },
   computed: {
     isActive() {
-      return this.name === this.current_scene;
+      return this.name === this.current_scene
+    },
+    showDetail() {
+      return this.name  === this.detail_scene
     }
   },
   methods: {
     changeScene(name) {
       this.$emit("changeScene", name);
     },
-    dropDownClick(name){
+    async dropDownClick(name){
       this.$emit("dropDownClick", name);
+      if (!this.showDetail) {  // (!) Take the opposite since the state has flipped due to the emit above
+        await this.getSceneItems(name)
+      }
+    },
+    async getSceneItems(name) {
+      const data = await this.obs.send("GetSceneItemList", {
+          sceneName: name
+        });
+      this.scene_items = data.sceneItems
+      console.log(data.sceneItems)
+      return data.sceneItems
     }
   },
   emits: ["changeScene", "dropDownClick"],
