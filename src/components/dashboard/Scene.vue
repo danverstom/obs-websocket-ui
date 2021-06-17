@@ -1,15 +1,13 @@
 <template>
-  <div :class="[isActive ? 'active-scene' : '', 'scene-container']">
-    <span class="icon">
-      <i class="fas fa-photo-video"></i>
+  <div :class="[isActive ? 'active-scene' : '', 'scene-container']" @dblclick="changeScene(name)">
+    <span class="icon clickable" @click="changeScene(name)">
+      <i :class="ui_selected_scene === name ? 'fas fa-check-square': 'far fa-square'"></i>
     </span>
     <span class="subtitle">{{ name }}</span>
     <span class="icon right clickable">
-      <i class="fab fa-github"></i>
+      <i class="fas fa-chevron-down"></i>
     </span>
-    <span class="icon right clickable">
-      <i class="fas fa-photo-video"></i>
-    </span>
+    
   </div>
 </template>
 
@@ -19,12 +17,19 @@ export default {
   props: {
     name: String,
     current_scene: String,
+    ui_selected_scene: String
   },
   computed: {
     isActive() {
       return this.name === this.current_scene;
     },
   },
+  methods: {
+    changeScene(name) {
+      this.$emit("changeScene", name);
+    }
+  },
+  emits: ["changeScene"]
 };
 </script>
 
