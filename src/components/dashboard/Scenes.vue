@@ -4,7 +4,9 @@
       :name="scene.name"
       :current_scene="current_scene"
       :ui_selected_scene="ui_selected_scene"
+      :detail_scene="detail_scene"
       v-on:changeScene="changeScene"
+      v-on:dropDownClick="dropDownClick"
     />
   </div>
 </template>
@@ -25,6 +27,7 @@ export default {
       scene_data: [],
       current_scene: "",
       ui_selected_scene: "",
+      detail_scene: ""
     }
   },
   created() {
@@ -54,6 +57,15 @@ export default {
       this.obs.send("SetCurrentScene", {
         "scene-name": name
       })
+    },
+    dropDownClick(name) {
+      if ( this.detail_scene !== name ){
+        this.detail_scene = name
+      } else {
+        // The scene is already selected with the dropdown
+        this.detail_scene = ""  // Set to none
+      }
+      
     }
   }
 };

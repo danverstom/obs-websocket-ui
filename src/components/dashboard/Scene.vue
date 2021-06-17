@@ -1,13 +1,28 @@
 <template>
-  <div :class="[isActive ? 'active-scene' : '', 'scene-container']" @dblclick="changeScene(name)">
+  <div
+    :class="[isActive ? 'active-scene' : '', 'scene-container']"
+    @dblclick="changeScene(name)"
+  >
     <span class="icon clickable" @click="changeScene(name)">
-      <i :class="ui_selected_scene === name ? 'fas fa-check-square': 'far fa-square'"></i>
+      <i
+        :class="
+          ui_selected_scene === name ? 'fas fa-check-square' : 'far fa-square'
+        "
+      ></i>
     </span>
     <span class="subtitle">{{ name }}</span>
-    <span class="icon right clickable">
-      <i class="fas fa-chevron-down"></i>
+    <span
+      class="icon right clickable"
+      @click="dropDownClick(name)"
+    >
+      <i :class="detail_scene === name ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
     </span>
-    
+
+    <div v-if="detail_scene === name">
+      <div class="box">
+        <h2 class="subtitle">Detailed View</h2>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -17,19 +32,28 @@ export default {
   props: {
     name: String,
     current_scene: String,
-    ui_selected_scene: String
+    ui_selected_scene: String,
+    detail_scene: String
+  },
+  data() {
+    return {
+      detail: false,
+    };
   },
   computed: {
     isActive() {
       return this.name === this.current_scene;
-    },
+    }
   },
   methods: {
     changeScene(name) {
       this.$emit("changeScene", name);
+    },
+    dropDownClick(name){
+      this.$emit("dropDownClick", name);
     }
   },
-  emits: ["changeScene"]
+  emits: ["changeScene", "dropDownClick"],
 };
 </script>
 
@@ -47,17 +71,19 @@ span {
   background-color: rgba(0, 0, 0, 0.1);
   margin: 5px;
   padding: 5px;
+  border-radius: 10px;
+  user-select: none;
 }
 
 .active-scene {
   background-color: rgba(0, 255, 0, 0.1);
 }
 
-.right{
+.right {
   float: right;
 }
 
-.clickable{
+.clickable {
   cursor: pointer;
 }
 </style>
