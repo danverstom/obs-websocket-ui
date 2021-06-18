@@ -8,6 +8,7 @@
       v-on:changeScene="changeScene"
       v-on:dropDownClick="dropDownClick"
       :obs="obs"
+      v-on:OpenSourceSettings="openSourceSettings"
     />
   </div>
 </template>
@@ -23,6 +24,7 @@ export default {
   props: {
     obs: Object,
   },
+  emits: ["OpenSourceSettings"],
   data() {
     return {
       scene_data: [],
@@ -41,6 +43,10 @@ export default {
     this.queryScenes();
   },
   methods: {
+    openSourceSettings(source_name, scene_name) {
+      console.log("Scenes component got open settings event", source_name)
+      this.$emit('OpenSourceSettings', source_name, scene_name)
+    },
     async queryScenes() {
       const scene_data = await this.obs.send("GetSceneList");
       console.log(scene_data);

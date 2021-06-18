@@ -11,17 +11,22 @@
       ></i>
     </span>
     <span class="subtitle">{{ name }}</span>
-    <span
-      class="icon right clickable"
-      @click="dropDownClick(name)"
-    >
-      <i :class="detail_scene === name ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+    <span class="icon right clickable" @click="dropDownClick(name)">
+      <i
+        :class="
+          detail_scene === name ? 'fas fa-chevron-up' : 'fas fa-chevron-down'
+        "
+      ></i>
     </span>
 
     <div v-if="detail_scene === name">
       <div class="box">
         <div v-for="source in scene_items" :key="source.itemId">
-          <Source :source_details="source" :obs="obs" />
+          <Source
+            :source_details="source"
+            :obs="obs"
+            v-on:OpenSourceSettings="openSourceSettings"
+          />
         </div>
       </div>
     </div>
@@ -41,7 +46,7 @@ export default {
     current_scene: String,
     ui_selected_scene: String,
     detail_scene: String,
-    obs: Object
+    obs: Object,
   },
   data() {
     return {
@@ -50,32 +55,37 @@ export default {
   },
   computed: {
     isActive() {
-      return this.name === this.current_scene
+      return this.name === this.current_scene;
     },
     showDetail() {
-      return this.name  === this.detail_scene
-    }
+      return this.name === this.detail_scene;
+    },
   },
   methods: {
+    openSourceSettings(source_name) {
+      console.log("Scene component got open settings event", source_name)
+      this.$emit('OpenSourceSettings', source_name, this.name)
+    },
     changeScene(name) {
       this.$emit("changeScene", name);
     },
-    async dropDownClick(name){
+    async dropDownClick(name) {
       this.$emit("dropDownClick", name);
-      if (!this.showDetail) {  // (!) Take the opposite since the state has flipped due to the emit above
-        await this.getSceneItems(name)
+      if (!this.showDetail) {
+        // (!) Take the opposite since the state has flipped due to the emit above
+        await this.getSceneItems(name);
       }
     },
     async getSceneItems(name) {
       const data = await this.obs.send("GetSceneItemList", {
-          sceneName: name
-        });
-      this.scene_items = data.sceneItems
-      console.log(data.sceneItems)
-      return data.sceneItems
-    }
+        sceneName: name,
+      });
+      this.scene_items = data.sceneItems;
+      console.log(data.sceneItems);
+      return data.sceneItems;
+    },
   },
-  emits: ["changeScene", "dropDownClick"],
+  emits: ["changeScene", "dropDownClick", "OpenSourceSettings"],
 };
 </script>
 
