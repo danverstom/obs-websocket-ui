@@ -17,14 +17,15 @@
             <SettingsField :setting_name="setting_name" :value="value" v-on:SettingValueChange="sourceSettingChange"/>
           </div>
           <hr>
-          <h1 class="subtitle">Source Scene Properties</h1>
+          <h1 class="subtitle">Scene Specific Properties</h1>
           <div v-for="(value, setting_name) in source_properties" :key="setting_name">
             <SettingsField :setting_name="setting_name" :value="value" v-on:SettingValueChange="sourceScenePropertyChange"/>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" :disabled="!(settingChange || propertyChange)">Save changes</button>
-          <button class="button" @click="closeModal">Cancel</button>
+          <button class="button is-success" :disabled="!(settingChange || propertyChange)" @click="saveChanges(true)">Save</button>
+          <button class="button is-success is-light" :disabled="!(settingChange || propertyChange)" @click="saveChanges(false)">Apply</button>
+          <button class="button is-light" @click="closeModal">Cancel</button>
         </footer>
       </div>
     </div>
@@ -66,6 +67,29 @@ export default {
   },
   emits: ["CloseSourceDetailModal"],
   methods: {
+    async saveChanges(close) {
+      if (this.settingChange) {
+        const result = await this.obs.send("SetSourceSettings", {
+          sourceName: this.source_name,
+          sourceSettings: this.source_settings
+        });
+        console.log("Sent Setting Change. Response:", result)
+        this.source_settings = result.sourceSettings
+        this.old_source_settings = JSON.parse(JSON.stringify(result.sourceSettings))  // hate this but it works
+      }
+      if (this.propertyChange) {
+        var data = JSON.parse(JSON.stringify(this.source_properties));
+        data["item"] = this.source_name
+        console.log(data)
+        const result = await this.obs.send("SetSceneItemProperties", data);
+        console.log("Sent Property Change. Response:", result)
+        this.getProperties()
+      }
+      if (close) {
+        this.closeModal();
+      }
+      
+    },
     sourceSettingChange(setting_name, new_value) {
       console.log("Source Setting Change Detected:", setting_name, new_value)
       this.source_settings[setting_name] = new_value
@@ -114,6 +138,10 @@ export default {
       delete data["itemId"]
       delete data["message-id"]
       delete data["status"]
+      delete data["bounds"]
+      delete data["crop"]
+      delete data["position"]
+      delete data["scale"]
     }
   },
   computed: {

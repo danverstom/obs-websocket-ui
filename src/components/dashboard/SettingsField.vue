@@ -1,12 +1,18 @@
 <template>
-  <div class="box field" v-if="!isObject">
+  <div class="field" v-if="!isObject">
     <label class="label">{{ setting_name }}</label>
     <p class="control">
-      <input class="input" v-model="new_value" @change="broadcastChange" />
+      <input class="input" type="text" v-model="new_value" @change="broadcastChange" v-if="typeof new_value === 'string'"/>
+      <input class="input" type="number" v-model="new_value" @change="broadcastChange" v-else-if="typeof new_value === 'number'"/>
+      <label class="checkbox" v-else-if="typeof new_value === 'boolean'">
+        <input type="checkbox" v-model="new_value" @change="broadcastChange">
+        {{ new_value }}
+      </label>
     </p>
+
   </div>
   <div class="box" v-else>
-    <h2 class="subtitle">{{ setting_name }}</h2>
+    <label class="label" style="text-decoration: underline">{{ setting_name }}</label>
     <div v-for="(sub_value, sub_setting_name) in value" :key="sub_setting_name">
       <SettingsField :setting_name="sub_setting_name" :value="sub_value" v-on:SettingValueChange="childValueChange" />
     </div>
@@ -50,7 +56,7 @@ export default {
 </script>
 
 <style scoped>
-.box {
-  margin: 10px;
+div {
+  margin: 10px
 }
 </style>
